@@ -7,3 +7,4 @@ members:
 1. Trent Dillon - tmaxd@uw.edu
 1. Kexin Song   - kexin.song@rsmas.miami.edu
 1. chelle gentemann - cgentemann@esr.org
+1. Bia Villas Boas - avillasb@ucsd.edu
