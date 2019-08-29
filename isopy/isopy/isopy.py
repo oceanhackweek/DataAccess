@@ -67,7 +67,7 @@ def compute_iso(data, iso, lev, d_or_t):
             print('Is this density or temperature?')
     return var_iso
 
-def compute_isoval(density_data, ts_data, iso):
+def iso_val(density_data, ts_data, iso):
 
     """ compute temperature or salinity along some isopycnal/isotherm.
     
@@ -117,11 +117,13 @@ def iso_average(data, var_iso, lev):
     Parameters:
     ----------------
     
-    data: the input variable (Temperature, Salinity, Density ...),
-        array_like (3D), shape (N, M, L).
+    data: the input variable (temperature, salinity, U, V),
+        array_like (3D), shape (N, M, L).   
+    var_iso: the isopycnal layer,
+        array_like (2D), shape (M, L).
 
     lev: the vertical depth,
-        array_like (1D), shape (N)
+        array_like (1D), shape (N).
         
     Returns:
     ----------------
@@ -130,6 +132,7 @@ def iso_average(data, var_iso, lev):
         array_like (2D), shape (M, L).
     
     """
+    
     size = data.shape
     L = size[2]
     M = size[1]
