@@ -34,7 +34,11 @@ def compute_iso(data, iso, lev, d_or_t):
     if len(lev) != N:
         print('Error: either data input variable does not have depth as dimension 0, or lev variable is not same length as depth')
     else:
+<<<<<<< HEAD
         if d_or_t in {'d','t'} :
+=======
+        if d_or_t in {'d', 't'}:
+>>>>>>> de45a08845c975984e414208bcd1b15f38337a0a
             var_iso = np.zeros((M, L)) # define the output var
             var_iso[:, :] = np.nan # NaN fill to avoid any later computation errors with zeros
 
@@ -67,8 +71,50 @@ def compute_iso(data, iso, lev, d_or_t):
             print('Is this density or temperature?')
     return var_iso
 
+def compute_isoval(density_data, ts_data, iso):
 
-def iso_average(data, iso, lev):
+    """ compute temperature or salinity along some isopycnal/isotherm.
+    
+    Parameters:
+    ----------------
+    
+    density_data: density input,
+        array_like (3D), shape (N, M, L).
+    ts_data: temp or salt input,
+        array_like (3D), shape (N, M, L).
+    iso: the objective isosurface layer,
+        float.
+        
+    Returns:
+    ----------------
+    
+    ts_iso: the output variable,
+        array_like (2D), shape (M, L).
+        
+    """
+    size = density_data.shape
+    L = size[2]
+    M = size[1]
+    N = size[0]
+    
+    ts_iso = np.zeros((M, L)) # define the output var
+    ts_iso[:, :] = np.nan # NaN fill to avoid any later computation errors with zeros
+    
+    dens = xr.DataArray(density_data)
+    var = xr.DataArray(ts_data)
+    a = dens.where(dens.min(axis=0)<iso)
+    b = var.where(dens.min(axis=0)<iso) 
+
+    for j in range(M):
+        for k in range(L):
+            x = a[:,j,k]
+            y = b[:,j,k]
+            f = interpolate.interp1d(x.values,y.values,'linear')
+            ts_iso[j,k] = f(iso)
+            
+    return ts_iso
+
+def iso_average(data, var_iso, lev):
     
     """ compute vertical average above the objective isopycnal layer
     
@@ -77,8 +123,7 @@ def iso_average(data, iso, lev):
     
     data: the input variable (Temperature, Salinity, Density ...),
         array_like (3D), shape (N, M, L).
-    iso: the objective isopycnal layer,
-        float.
+
     lev: the vertical depth,
         array_like (1D), shape (N)
         
@@ -89,5 +134,29 @@ def iso_average(data, iso, lev):
         array_like (2D), shape (M, L).
     
     """
+    size = data.shape
+    L = size[2]
+    M = size[1]
+    N = size[0]
     
-    return var_ave
+    data_new = (data[:-1, :, :] + data[1:, :, :]) / 2
+    dz = lev[1:] - lev[:-1]
+
+    var_out = np.zeros((M, L))
+    var_out[:, :] = np.NaN
+    
+    for i in np.arange(L): #loop through dimension 1
+        for j in np.arange(M): #loop through dimension 2
+            
+            var1 = data_new[:, j, i] * dz
+            idx = find_nearest(lev, dep_iso[j, i])
+        
+            if idx > 0:
+                var_out[j, i] = np.nansum(var1[:idx]) / np.sum(dz[:idx])
+    return var_out
+                
+def find_nearest(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return idx
+
