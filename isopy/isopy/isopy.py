@@ -9,42 +9,67 @@ def compute_iso(data, iso, lev):
     Parameters:
     ----------------
     
-    data: the input variable (Temp, Salinity, Density ...)
+    data: the input variable (Temperature, Salinity, Density ...),
         array_like (3D), shape (N, M, L).
-    iso: the objective isopycnal layer
+    iso: the objective isopycnal layer,
         float.
-    lev: the vertical depth
+    lev: the vertical depth,
         array_like (1D), shape (N)
         
-    Returns
+    Returns:
+    ----------------
+    
+    var_iso: the output variable,
+        array_like (2D), shape (M, L).
         
     """
+    size = data.shape
+    L = size[2]
+    M = size[1]
+    N = size[0]
     
+    var_iso = np.zeros((M, L)) # define the output var
+    var_iso[:, :] = np.nan
     
-    dep_iso = np.zeros((den.shape[1], den.shape[2]))
-    dep_iso[:, :] = np.nan
-    for i in np.arange(0, den.shape[2], 1):
-        for j in np.arange(0, den.shape[1], 1):
+    for i in np.arange(L):
+        for j in np.arange(M):
 
-            den_tmp = den[:, j, i]
+            data_tmp = data[:, j, i]
 
-            id1 = np.where(den_tmp < iso)
+            id1 = np.where(data_tmp < iso)
 
             if np.size(id1) > 0 and np.size(id1) < len(z):
                 
-                den1 = den_tmp[id1[0][-1]]
-                den2 = den_tmp[id1[0][-1] + 1]
+                den1 = data_tmp[id1[0][-1]]
+                den2 = data_tmp[id1[0][-1] + 1]
 
                 if den1 < den2:
-                    fun2 = interpolate.interp1d([den1, den2], [z[id1[0][-1]], z[id1[0][-1] + 1]])
-                    dep_iso[j, i] = fun2(iso)
-                    print(str(i) + '  ' + str(j))
-                    print('success')
+                    fun2 = interpolate.interp1d([den1, den2], [lev[id1[0][-1]], lev[id1[0][-1] + 1]])
+                    var_iso[j, i] = fun2(iso)
 
     return var_iso
 
 
 def iso_average(data, iso, lev):
     
+    """ compute vertical average above the objective isopycnal layer
+    
+    Parameters:
+    ----------------
+    
+    data: the input variable (Temperature, Salinity, Density ...),
+        array_like (3D), shape (N, M, L).
+    iso: the objective isopycnal layer,
+        float.
+    lev: the vertical depth,
+        array_like (1D), shape (N)
+        
+    Returns:
+    ----------------
+    
+    var_ave: the output variable,
+        array_like (2D), shape (M, L).
+    
+    """
     
     return var_ave
