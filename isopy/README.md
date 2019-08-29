@@ -2,7 +2,7 @@
 
 Authors: Laura Gruenburg, Tongya Liu, Shanice Bailey, Kexin Song
 
-The isopy package package employs three separate functions.
+This package allows users to change their datasets into isosurfaces coordinates.
 
 1. The `compute_iso` function computes the depths of isopycnal and isotherm surfaces.
 2. The `compute_isoval` function provides the temperature and salinity values along the isosurfaces.
