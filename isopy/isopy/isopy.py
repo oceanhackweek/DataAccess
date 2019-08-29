@@ -2,19 +2,21 @@ import numpy as np
 import xarray as xr
 from scipy import interpolate
 
-def compute_iso(data, iso, lev):
+def compute_iso(data, iso, lev, d_or_t):
 
-    """ compute the var along isopycnal layers.
+    """ compute the depth of some isopycnal/isotherm.
     
     Parameters:
     ----------------
     
-    data: the input variable (Temperature, Salinity, Density ...),
+    data: the input variable (Temperature, Density),
         array_like (3D), shape (N, M, L).
-    iso: the objective isopycnal layer,
+    iso: the objective isosurface layer,
         float.
     lev: the vertical depth,
-        array_like (1D), shape (N)
+        array_like (1D), shape (N).
+    d_or_t: input d or t for density or temperature (lowercase)
+        string
         
     Returns:
     ----------------
@@ -31,25 +33,39 @@ def compute_iso(data, iso, lev):
     #check that the input data is in the for depth lat lon (or depth lon lat)
     if len(lev) ~= N:
         print('Error: either data input variable does not have depth as dimension 0, or lev variable is not same length as depth')
-        
+        break
+    if d_or_t ~= 'd' or 't':
+        print('Is this density or temperature?')
+        break
     var_iso = np.zeros((M, L)) # define the output var
     var_iso[:, :] = np.nan # NaN fill to avoid any later computation errors with zeros
-    
+
     for i in np.arange(L): #loop through dimension 1
         for j in np.arange(M): #loop through dimension 2
 
-            data_tmp = data[:, j, i] # select one profile
+                data_prof = data[:, j, i] #select one profile
+                if d_or_t == 'd':
+                    id1 = np.where(data_prof < iso)
+                    if np.size(id1) > 0 and np.size(id1) < len(z):
 
-            id1 = np.where(data_tmp < iso) #find the index where v
+                        var1 = data_prof[id1[0][-1]]
+                        var2 = data_prof[id1[0][-1] + 1]
 
-            if np.size(id1) > 0 and np.size(id1) < len(z):
-                
-                den1 = data_tmp[id1[0][-1]]
-                den2 = data_tmp[id1[0][-1] + 1]
+                    if var1 < var2:
+                        func = interpolate.interp1d([var1, var2], [lev[id1[0][-1]], lev[id1[0][-1] + 1]])
+                        var_iso[j, i] = func(iso)
 
-                if den1 < den2:
-                    fun2 = interpolate.interp1d([den1, den2], [lev[id1[0][-1]], lev[id1[0][-1] + 1]])
-                    var_iso[j, i] = fun2(iso)
+                else：
+                    id1 = np.where(data_prof > iso)
+                        
+                    if np.size(id1) > 0 and np.size(id1) < len(z):
+
+                        var1 = data_prof[id1[0][-1]]
+                        var2 = data_prof[id1[0][-1] + 1]
+
+                    if var1 > var2:
+                        func = interpolate.interp1d([var1, var2], [lev[id1[0][-1]], lev[id1[0][-1] + 1]])
+                        var_iso[j, i] = func(iso)
 
     return var_iso
 
