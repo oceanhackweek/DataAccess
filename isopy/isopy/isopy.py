@@ -2,7 +2,7 @@ import numpy as np
 import xarray as xr
 from scipy import interpolate
 
-def compute_iso(data, iso, lev):
+def compute_iso(data, iso, lev,var):
 
     """ compute the var along isopycnal layers.
     
@@ -23,6 +23,12 @@ def compute_iso(data, iso, lev):
         array_like (2D), shape (M, L).
         
     """
+    if var = 'temp':
+    
+    if var = 'salinity':
+    
+    if var = 'density':
+        
     size = data.shape
     L = size[2]
     M = size[1]
