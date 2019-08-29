@@ -88,7 +88,7 @@ def compute_isoval(density_data, ts_data, iso):
         array_like (2D), shape (M, L).
         
     """
-    size = data.shape
+    size = density_data.shape
     L = size[2]
     M = size[1]
     N = size[0]
