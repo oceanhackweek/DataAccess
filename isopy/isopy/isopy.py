@@ -26,17 +26,21 @@ def compute_iso(data, iso, lev):
     size = data.shape
     L = size[2]
     M = size[1]
-    N = size[0]
+    N = size[0] #this should be the same length as lev
     
+    #check that the input data is in the for depth lat lon (or depth lon lat)
+    if len(lev) ~= N:
+        print('Error: either data input variable does not have depth as dimension 0, or lev variable is not same length as depth')
+        
     var_iso = np.zeros((M, L)) # define the output var
-    var_iso[:, :] = np.nan
+    var_iso[:, :] = np.nan # NaN fill to avoid any later computation errors with zeros
     
-    for i in np.arange(L):
-        for j in np.arange(M):
+    for i in np.arange(L): #loop through dimension 1
+        for j in np.arange(M): #loop through dimension 2
 
-            data_tmp = data[:, j, i]
+            data_tmp = data[:, j, i] # select one profile
 
-            id1 = np.where(data_tmp < iso)
+            id1 = np.where(data_tmp < iso) #find the index where v
 
             if np.size(id1) > 0 and np.size(id1) < len(z):
                 
