@@ -34,11 +34,7 @@ def compute_iso(data, iso, lev, d_or_t):
     if len(lev) != N:
         print('Error: either data input variable does not have depth as dimension 0, or lev variable is not same length as depth')
     else:
-<<<<<<< HEAD
         if d_or_t in {'d','t'} :
-=======
-        if d_or_t in {'d', 't'}:
->>>>>>> de45a08845c975984e414208bcd1b15f38337a0a
             var_iso = np.zeros((M, L)) # define the output var
             var_iso[:, :] = np.nan # NaN fill to avoid any later computation errors with zeros
 
