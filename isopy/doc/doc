@@ -1,0 +1,12 @@
+isopy!
+
+isopy is a python package of functions to compute the depth of isopycnal and isotherm surfaces, variables (such as temp/salinity) along isopycnal surfaces, and the average of some variable above some isopycnal surface, all from 3d gridded datasets.
+
+The depth of iso-surfaces and variables along isopycnals are computed using linear interpolation.
+
+The average variable above some isopycnal is computed using the equation:
+
+((a1 + a2)dz1 + (a2 + a3)/dz2 + ... + (ai-1 + ai)/dzi) / sum(dz#)
+
+where a# is the variable at # depth level, and dz# is the depth difference between adjacent depth levels.  This function takes into account unevenly spaced depth levels.
+
