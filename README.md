@@ -3,7 +3,16 @@ Repository for the data access project
 
 Please remember to 'Restart and clear all' before commiting .ipynb files
 
-members:
+## Directories
+
+* Chlorophyll: contains notebooks that show how to access chlorophyll (ocean colour) data from a remote server and perform various simple analysis routines.
+* Collocation: contains notebooks that collocate in situ observation with satellite observations, both for chlorophyll and sea-surface temperature
+* isopy:
+* ooi_jason_altair: notebooks about accessing OOI data via M2M
+
+
+
+## Members
 
 1. Trent Dillon - tmaxd@uw.edu
 1. Kexin Song   - kexin.song@rsmas.miami.edu
