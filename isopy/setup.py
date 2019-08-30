@@ -11,7 +11,7 @@ def read(fname):
 setup(
     name = "isopy",
     version = "0.0.1",
-    author = "Tongya Liu, Laura Gruenburg, Shanice Bailey, Kexin Song",
+    author = "Laura Gruenburg, Tongya Liu, Shanice Bailey, Kexin Song",
     author_email = "lkg2133@columbia.edu",
     description = ("Functions for determining variables along isopycnal surfaces from standard depths"),
     license = "BSD-3-Clause",
